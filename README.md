@@ -3,7 +3,7 @@
 
 ## Proje Hakkında
 
-![Ürün Tanıtım Görseli](Product.png)
+![Ürün Tanıtım Görseli](p4m.png)
 
 **Proje Tanımı:** 
 > Projenin ne iş yaptığını anlatan bir paragraflık tanıtım metni buraya yazılacaktır.
