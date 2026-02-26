@@ -41,4 +41,4 @@
 9) **Kullanıcıya Öneri Üret**
 
      - **API Metodu:** `GET /users/me/recommendations`  
-     - **Açıklama:** Kullanıcının kütüphanesi, izleme geçmişi, verdiği puanlar ve beğendiği türlere göre kişiselleştirilmiş film/dizi önerileri üretir.
+     - **Açıklama:** Kullanıcının kütüphanesi, izleme geçmişi, verdiği puanlar ve beğendiği türlere göre kişiselleştirilmiş film/dizi önerileri üretir. Giriş gerekli.
