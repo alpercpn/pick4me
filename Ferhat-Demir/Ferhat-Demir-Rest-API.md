@@ -1,6 +1,6 @@
 # Ferhat Demir REST API Metotları
 
-**API Test Videosu:** [Link buraya eklenecek](https://example.com)
+**API Test Videosu:** [Link buraya eklenecek]()
 
 ## 1. Giriş Yap
 - **Endpoint:** `POST /auth/login`
