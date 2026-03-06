@@ -8,5 +8,5 @@ Bu dokümanda, proje ekibindeki her üyenin geliştirmekten sorumlu olduğu REST
 
 ## Grup Üyelerinin REST API Metotları
 
-1. [Ferhat Demir'in REST API Metotları](Ferhat-Demir/Ferhat-Demir-Rest-API-Gorevleri.md)
-2. [Alper Çapan'ın REST API Metotları](Alper-Çapan/Alper-Çapan-Rest-API-Gorevleri.md)
+1. [Ferhat Demir'in REST API Metotları](Ferhat-Demir/Ferhat-Demir-Rest-API.md)
+2. [Alper Çapan'ın REST API Metotları](Alper-Çapan/Alper-Çapan-Rest-API.md)

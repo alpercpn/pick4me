@@ -1,0 +1,566 @@
+openapi: 3.0.3
+info:
+  title: Pick4Me API
+  version: 1.0.0
+  description: |
+    Yapay zeka destekli film/dizi öneri platformu için API tasarımı.
+
+servers:
+  - url: https://api.pick4me.com
+    description: Production server
+  - url: http://localhost:5000
+    description: Local development server
+
+tags:
+  - name: Auth
+  - name: Users
+  - name: Contents
+  - name: Library
+  - name: Ratings
+  - name: Comments
+  - name: Recommendations
+
+paths:
+  /auth/register:
+    post:
+      tags: [Auth]
+      summary: Kayıt ol
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RegisterRequest'
+      responses:
+        '201':
+          description: Kullanıcı başarıyla oluşturuldu
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AuthResponse'
+
+  /auth/login:
+    post:
+      tags: [Auth]
+      summary: Giriş yap
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/LoginRequest'
+      responses:
+        '200':
+          description: Giriş başarılı
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AuthResponse'
+        '401':
+          description: Geçersiz giriş bilgileri
+
+  /auth/logout:
+    post:
+      tags: [Auth]
+      summary: Çıkış yap
+      security:
+        - bearerAuth: []
+      responses:
+        '200':
+          description: Çıkış başarılı
+
+  /users/me:
+    get:
+      tags: [Users]
+      summary: Profil bilgilerini getir
+      security:
+        - bearerAuth: []
+      responses:
+        '200':
+          description: Kullanıcı profili
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+
+    put:
+      tags: [Users]
+      summary: Profil bilgilerini güncelle
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateUserRequest'
+      responses:
+        '200':
+          description: Profil güncellendi
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+
+    delete:
+      tags: [Users]
+      summary: Hesabı sil
+      security:
+        - bearerAuth: []
+      responses:
+        '200':
+          description: Hesap silindi
+
+  /contents:
+    get:
+      tags: [Contents]
+      summary: Film/Dizi listele
+      parameters:
+        - in: query
+          name: type
+          schema:
+            type: string
+            enum: [movie, series]
+        - in: query
+          name: genre
+          schema:
+            type: string
+        - in: query
+          name: year
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: İçerik listesi
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Content'
+
+  /contents/search:
+    get:
+      tags: [Contents]
+      summary: Film/Dizi ara
+      parameters:
+        - in: query
+          name: q
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Arama sonuçları
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Content'
+
+  /contents/{contentId}:
+    get:
+      tags: [Contents]
+      summary: Film/Dizi detay görüntüle
+      parameters:
+        - in: path
+          name: contentId
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: İçerik detayı
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ContentDetail'
+        '404':
+          description: İçerik bulunamadı
+
+  /library:
+    get:
+      tags: [Library]
+      summary: Kütüphanedeki öğeleri listele
+      security:
+        - bearerAuth: []
+      responses:
+        '200':
+          description: Kullanıcının kütüphanesi
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/LibraryItem'
+
+    post:
+      tags: [Library]
+      summary: Kütüphaneye film/dizi ekle
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateLibraryItemRequest'
+      responses:
+        '201':
+          description: Öğe kütüphaneye eklendi
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/LibraryItem'
+
+  /library/{libraryItemId}:
+    put:
+      tags: [Library]
+      summary: Kütüphanedeki öğeyi güncelle
+      security:
+        - bearerAuth: []
+      parameters:
+        - in: path
+          name: libraryItemId
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateLibraryItemRequest'
+      responses:
+        '200':
+          description: Kütüphane öğesi güncellendi
+
+    delete:
+      tags: [Library]
+      summary: Kütüphanedeki öğeyi sil
+      security:
+        - bearerAuth: []
+      parameters:
+        - in: path
+          name: libraryItemId
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Kütüphane öğesi silindi
+
+  /ratings:
+    post:
+      tags: [Ratings]
+      summary: Bir içeriğe puan ver
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateRatingRequest'
+      responses:
+        '201':
+          description: Puan kaydedildi
+
+  /comments:
+    post:
+      tags: [Comments]
+      summary: Bir içeriğe yorum ekle
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateCommentRequest'
+      responses:
+        '201':
+          description: Yorum eklendi
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Comment'
+
+  /comments/{commentId}:
+    delete:
+      tags: [Comments]
+      summary: Yorumu sil
+      security:
+        - bearerAuth: []
+      parameters:
+        - in: path
+          name: commentId
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Yorum silindi
+
+  /comments/analyze:
+    post:
+      tags: [Comments]
+      summary: Yorumu analiz et (küfür / kötü içerik tespiti)
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AnalyzeCommentRequest'
+      responses:
+        '200':
+          description: Analiz sonucu
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CommentAnalysisResponse'
+
+  /recommendations/me:
+    get:
+      tags: [Recommendations]
+      summary: Kullanıcıya öneri üret
+      security:
+        - bearerAuth: []
+      responses:
+        '200':
+          description: Önerilen içerikler
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Content'
+
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+
+  schemas:
+    RegisterRequest:
+      type: object
+      required: [fullName, email, password]
+      properties:
+        fullName:
+          type: string
+          example: Alper Çapan
+        email:
+          type: string
+          format: email
+          example: alper@example.com
+        password:
+          type: string
+          format: password
+          example: 123456
+
+    LoginRequest:
+      type: object
+      required: [email, password]
+      properties:
+        email:
+          type: string
+          format: email
+          example: alper@example.com
+        password:
+          type: string
+          format: password
+          example: 123456
+
+    AuthResponse:
+      type: object
+      properties:
+        token:
+          type: string
+          example: jwt-token-example
+        user:
+          $ref: '#/components/schemas/User'
+
+    User:
+      type: object
+      properties:
+        id:
+          type: integer
+          example: 1
+        fullName:
+          type: string
+          example: Alper Çapan
+        email:
+          type: string
+          example: alper@example.com
+        profilePhotoUrl:
+          type: string
+          nullable: true
+
+    UpdateUserRequest:
+      type: object
+      properties:
+        fullName:
+          type: string
+        email:
+          type: string
+          format: email
+        password:
+          type: string
+          format: password
+
+    Content:
+      type: object
+      properties:
+        id:
+          type: integer
+          example: 101
+        title:
+          type: string
+          example: Interstellar
+        type:
+          type: string
+          enum: [movie, series]
+        genre:
+          type: string
+          example: Bilim Kurgu
+        releaseYear:
+          type: integer
+          example: 2014
+        averageRating:
+          type: number
+          format: float
+          example: 8.7
+
+    ContentDetail:
+      allOf:
+        - $ref: '#/components/schemas/Content'
+        - type: object
+          properties:
+            description:
+              type: string
+              example: Uzay ve zaman üzerine bilim kurgu filmi.
+            director:
+              type: string
+              example: Christopher Nolan
+            cast:
+              type: array
+              items:
+                type: string
+
+    LibraryItem:
+      type: object
+      properties:
+        id:
+          type: integer
+          example: 1
+        userId:
+          type: integer
+          example: 1
+        contentId:
+          type: integer
+          example: 101
+        status:
+          type: string
+          enum: [watching, completed, dropped, planned]
+        userScore:
+          type: integer
+          minimum: 1
+          maximum: 10
+
+    CreateLibraryItemRequest:
+      type: object
+      required: [contentId, status]
+      properties:
+        contentId:
+          type: integer
+          example: 101
+        status:
+          type: string
+          enum: [watching, completed, dropped, planned]
+        userScore:
+          type: integer
+          minimum: 1
+          maximum: 10
+
+    UpdateLibraryItemRequest:
+      type: object
+      properties:
+        status:
+          type: string
+          enum: [watching, completed, dropped, planned]
+        userScore:
+          type: integer
+          minimum: 1
+          maximum: 10
+
+    CreateRatingRequest:
+      type: object
+      required: [contentId, score]
+      properties:
+        contentId:
+          type: integer
+          example: 101
+        score:
+          type: integer
+          minimum: 1
+          maximum: 10
+          example: 9
+
+    CreateCommentRequest:
+      type: object
+      required: [contentId, text]
+      properties:
+        contentId:
+          type: integer
+          example: 101
+        text:
+          type: string
+          example: Gerçekten çok etkileyici bir filmdi.
+
+    Comment:
+      type: object
+      properties:
+        id:
+          type: integer
+          example: 501
+        userId:
+          type: integer
+          example: 1
+        contentId:
+          type: integer
+          example: 101
+        text:
+          type: string
+        createdAt:
+          type: string
+          format: date-time
+
+    AnalyzeCommentRequest:
+      type: object
+      required: [text]
+      properties:
+        text:
+          type: string
+          example: Bu içerik çok kötüydü
+
+    CommentAnalysisResponse:
+      type: object
+      properties:
+        isToxic:
+          type: boolean
+          example: false
+        containsProfanity:
+          type: boolean
+          example: false
+        confidence:
+          type: number
+          format: float
+          example: 0.92
+        message:
+          type: string
+          example: Yorum temiz görünüyor.
