@@ -16,33 +16,39 @@ Bu proje, modern web teknolojileri ve temel yapay zeka yaklaşımlarını bir ar
 **Proje Kategorisi:** 
 > Kategori: Medya & Eğlence | Yapay Zeka Tabanlı Film–Dizi Öneri Sistemi
 
-**Referans Uygulama:** 
-> <!--[Örnek Referans Uygulama](https://example.com)
 
 ---
 
 ## Proje Linkleri
 
-- **REST API Adresi:** <!--[api.yazmuh.com](https://api.yazmuh.com)
-- **Web Frontend Adresi:** <!--[frontend.yazmuh.com](https://frontend.yazmuh.com)
+- **REST API Adresi:** [api.yazmuh.com](https://api.yazmuh.com)
+- **Web Frontend Adresi:** [frontend.yazmuh.com](https://frontend.yazmuh.com)
 
 ---
 
 ## Proje Ekibi
 
 **Grup Adı:** 
-> *TuBug*
+Tubug
 
 **Ekip Üyeleri:** 
-- Alper Çapan
 - Ferhat Demir
+- Alper Çapan
+
 
 ---
 
 ## Dokümantasyon
 
+Proje dokümantasyonuna aşağıdaki linklerden erişebilirsiniz:
 
-
-
+1. [Gereksinim Analizi](Gereksinim-Analizi.md)
+2. [REST API Tasarımı](API-Tasarimi.md)
+3. [REST API](Rest-API.md)
+4. [Web Front-End](WebFrontEnd.md)
+5. [Mobil Front-End](MobilFrontEnd.md)
+6. [Mobil Backend](MobilBackEnd.md)
+7. [Video Sunum](Sunum.md)
 
 ---
+
